@@ -37,7 +37,7 @@ public class Review {
       Scanner input = new Scanner(new File("positiveAdjectives.txt"));
       while(input.hasNextLine()){
         String temp = input.nextLine().trim();
-        System.out.println(temp);
+//        System.out.println(temp);
         posAdjectives.add(temp);
       }
       input.close();
@@ -143,6 +143,103 @@ public class Review {
       return randomPositiveAdj();
     } else {
       return randomNegativeAdj();
+    }
+  }
+
+  public static double totalSentiment(String fileName) {
+    String file_content = textToString(fileName);
+    double total = 0;
+    String current_word;
+    int space_ind;
+    double word_score;
+    double average;
+    double count = 0;
+    double adjusted_word_score;
+    double min = -3.49;
+    double max = 2.81;
+
+    while (file_content.indexOf(" ") != -1) {
+      space_ind = file_content.indexOf(" ");
+      current_word = file_content.substring(0, space_ind);
+      file_content = file_content.substring(space_ind + 1);
+      word_score = sentimentVal(current_word);
+      count += 1;
+    }
+    average = total/count;
+    return total;
+
+  }
+  public static int starRating(String fileName) {
+    double score = totalSentiment(fileName);
+    int star;
+
+    if (score<0) {
+      star=1;
+    }
+    else if (score < 3) {
+      star = 2;
+    }
+    else if (score < 6) {
+      star = 3;
+    }
+    else if (score < 9) {
+      star = 4;
+    }
+    else {
+      star = 5;
+    }
+
+    return star;
+
+  }
+
+  public static String fakeReview(String filename) {
+    int score = starRating(filename);
+    String file_content = textToString(filename);
+    int space_ind;
+    int add = 0;
+    String current_word;
+    String new_content ="";
+
+    if(score < 3) {
+      //this will be to replace with negative adjectives
+      while (file_content.contains("*")) {
+        if (file_content.contains(" ")) {
+          space_ind = file_content.indexOf(" ");
+          add = 1;
+        }
+        else {
+          space_ind = file_content.length();
+          add = 0;
+        }
+        current_word = file_content.substring(0, space_ind);
+        if (Character.compare(current_word.charAt(0), '*') == 0) {
+          current_word = randomNegativeAdj();
+        }
+        file_content = file_content.substring(space_ind + add);
+        new_content += current_word + " ";
+      }
+      new_content += file_content;
+      return new_content;
+    }
+    else {
+      while (file_content.contains("*")) {
+        if (file_content.contains(" ")) {
+          space_ind = file_content.indexOf(" ");
+          add = 1;
+        }
+        else {
+          space_ind = file_content.length();
+          add = 0;
+        }
+        current_word = file_content.substring(0, space_ind);
+        if (Character.compare(current_word.charAt(0), '*') == 0) {
+          current_word = randomPositiveAdj();
+        }
+        file_content = file_content.substring(space_ind + add);
+        new_content += current_word + " ";
+      }
+      return new_content;
     }
   }
 }

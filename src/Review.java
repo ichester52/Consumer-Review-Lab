@@ -160,12 +160,12 @@ public class Review {
 
     while (file_content.indexOf(" ") != -1) {
       space_ind = file_content.indexOf(" ");
-      current_word = file_content.substring(0, space_ind);
+      current_word = file_content.substring(1, space_ind);
       file_content = file_content.substring(space_ind + 1);
       word_score = sentimentVal(current_word);
+      total += word_score;
       count += 1;
     }
-    average = total/count;
     return total;
 
   }
@@ -201,7 +201,7 @@ public class Review {
     String current_word;
     String new_content ="";
 
-    if(score < 3) {
+    if(score >= 3) {
       //this will be to replace with negative adjectives
       while (file_content.contains("*")) {
         if (file_content.contains(" ")) {
@@ -214,7 +214,16 @@ public class Review {
         }
         current_word = file_content.substring(0, space_ind);
         if (Character.compare(current_word.charAt(0), '*') == 0) {
-          current_word = randomNegativeAdj();
+          String current_adj = randomNegativeAdj();
+          if (current_word.substring(current_word.length() - 1).equals("y")) {
+            while (current_adj.substring(current_adj.length() - 1).equals("y") == false) {
+              current_adj = randomNegativeAdj();
+              System.out.println(current_adj);
+              System.out.println(current_word);
+              System.out.println();
+            }
+          }
+          current_word = current_adj;
         }
         file_content = file_content.substring(space_ind + add);
         new_content += current_word + " ";

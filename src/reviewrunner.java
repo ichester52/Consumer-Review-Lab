@@ -11,7 +11,7 @@ public class reviewrunner {
         double total_score = review.totalSentiment("review.txt");
 //        System.out.println(total_score);
         int star_rating = review.starRating("review.txt");
-//        System.out.print(star_rating);
+        System.out.println(star_rating);
 
         String new_review = review.fakeReview("review.txt");
         System.out.print(new_review);
